@@ -19,7 +19,7 @@ class Detector(BaseDetector):
         try:
             img_data = engine.image
             img = np.array(engine.image)
-            self.net.setInput(cv2.dnn.blobFromImage(img, 1.0, (300, 300), (104., 177., 123.), False, False))
+            self.net.setInput(cv2.dnn.blobFromImage(img, size=(300, 300), mean=(104., 177., 123.)))
             faces = self.net.forward()
         except Exception as e:
             logger.exception(e)
@@ -27,7 +27,8 @@ class Detector(BaseDetector):
             self.next(callback)
             return
 
-        confidence_threshold = 0.5
+        # TODO: choose threshold based on empirical evidence
+        confidence_threshold = 0.3
         num_faces = faces.shape[2]
         if num_faces > 0:
             for i in range(num_faces):
