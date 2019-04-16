@@ -17,7 +17,6 @@ class Detector(BaseDetector):
     def detect(self, callback):
         engine = self.context.modules.engine
         try:
-            img_data = engine.image
             img = np.array(engine.image)
             self.net.setInput(cv2.dnn.blobFromImage(img, size=(300, 300), swapRB=True))
             faces = self.net.forward()
