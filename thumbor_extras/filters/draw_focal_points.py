@@ -5,4 +5,8 @@ class Filter(BaseFilter):
     def draw_focal_points(self):
         img = self.engine.image
         for focal_point in self.context.request.focal_points:
-            self.engine.draw_rectangle(focal_point.x, focal_point.y, focal_point.width, focal_point.height)
+            width = focal_point.width
+            height = focal_point.height
+            x = focal_point.x - (width / 2)
+            y = focal_point.y - (height / 2)
+            self.engine.draw_rectangle(x, y, width, height)
