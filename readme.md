@@ -18,7 +18,20 @@ The full SSD object detection model, trained on the [COCO dataset](http://cocoda
 
 ### draw_focal_points
 
-Draws a box around the focal points, for displaying the results of the detectors on a given image.
+Draws a box around the focal points, for displaying the results of the detectors on a given image. Takes optional arguments for box color and line width.
+
+Usage: `draw_focal_points([r, g, b, line_width])`
+
+Examples:
+- `draw_focal_points()`: draws boxes with defaults (green color and 3 pixel line width).
+- `draw_focal_points(255,0,0,5)`: draws boxes with red color and 5 pixel line width.
+
+Arguments:
+
+- `r`: R component of RGB color of box, default 0
+- `g`: G component of RGB color of box, default 255
+- `b`: B component of RGB color of box, default 0
+- `line_width`: the width of the box lines
 
 ## TODO
 
