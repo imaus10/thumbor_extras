@@ -1,1 +1,1 @@
-recursive-include thumbor_extras/detectors *.pb *.pbtxt
+recursive-include thumbor_extras/detectors/model_files *.pb *.pbtxt

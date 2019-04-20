@@ -1,18 +1,19 @@
 import os
 from setuptools import find_packages, setup
-from setuptools.command.build_py import build_py
+from setuptools.command.egg_info import egg_info
 import tarfile
 # this will break with python3...
 from urllib import urlretrieve
 
-class DownloadModelFiles(build_py):
+class DownloadModelFiles(egg_info):
     def run(self):
         root_dir = os.path.abspath(os.path.dirname(__file__))
-        detector_dir = os.path.join(root_dir, 'thumbor_extras/detectors')
+        models_dir = os.path.join(root_dir, 'thumbor_extras/detectors/model_files')
+        if not os.path.exists(models_dir):
+            os.mkdir(models_dir)
 
         # dnn_face_detector
-        face_detector_dir = os.path.join(detector_dir, 'dnn_face_detector')
-        face_detector_param_filename = os.path.join(face_detector_dir, 'opencv_face_detector_uint8.pb')
+        face_detector_param_filename = os.path.join(models_dir, 'opencv_face_detector_uint8.pb')
         if not os.path.exists(face_detector_param_filename):
             print('downloading dnn_face_detector model parameters file')
             urlretrieve(
@@ -20,7 +21,7 @@ class DownloadModelFiles(build_py):
                 face_detector_param_filename
             )
 
-        face_detector_config_filename = os.path.join(face_detector_dir, 'opencv_face_detector.pbtxt')
+        face_detector_config_filename = os.path.join(models_dir, 'opencv_face_detector.pbtxt')
         if not os.path.exists(face_detector_config_filename):
             print('downloading dnn_face_detector model config file')
             urlretrieve(
@@ -29,9 +30,8 @@ class DownloadModelFiles(build_py):
             )
 
         # dnn_object_detector
-        object_detector_dir = os.path.join(detector_dir, 'dnn_object_detector')
         model_name = 'ssd_mobilenet_v2_coco_2018_03_29'
-        object_detector_param_filename = os.path.join(object_detector_dir, 'frozen_inference_graph.pb')
+        object_detector_param_filename = os.path.join(models_dir, 'frozen_inference_graph.pb')
         if not os.path.exists(object_detector_param_filename):
             print('downloading and extracting dnn_object_detector model params file')
             tar_filename = model_name + '.tar.gz'
@@ -54,7 +54,7 @@ class DownloadModelFiles(build_py):
             )
             os.rmdir(os.path.join(root_dir, model_name))
         config_filename = model_name + '.pbtxt'
-        object_detector_config_filename = os.path.join(object_detector_dir, config_filename)
+        object_detector_config_filename = os.path.join(models_dir, config_filename)
         if not os.path.exists(object_detector_config_filename):
             print('downloading dnn_object_detector model config file')
             urlretrieve(
@@ -63,7 +63,7 @@ class DownloadModelFiles(build_py):
             )
 
         # continue with the normal process
-        build_py.run(self)
+        egg_info.run(self)
 
 with open('readme.md') as f:
     long_description = f.read()
@@ -88,7 +88,7 @@ setup(
         'thumbor'
     ],
     cmdclass={
-        'build_py': DownloadModelFiles
+        'egg_info': DownloadModelFiles
     },
     include_package_data=True
  )

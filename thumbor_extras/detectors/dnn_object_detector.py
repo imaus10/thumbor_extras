@@ -10,8 +10,9 @@ class Detector(BaseDetector):
         super(Detector, self).__init__(context, index, detectors)
         this_dir = os.path.dirname(os.path.abspath(__file__))
         self.net = cv2.dnn.readNet(
-            os.path.join(this_dir, 'frozen_inference_graph.pb'),
-            os.path.join(this_dir, 'ssd_mobilenet_v2_coco_2018_03_29.pbtxt')
+            # these are downloaded during setup.py egg_info
+            os.path.join(this_dir, 'model_files/frozen_inference_graph.pb'),
+            os.path.join(this_dir, 'model_files/ssd_mobilenet_v2_coco_2018_03_29.pbtxt')
         )
 
     def detect(self, callback):
