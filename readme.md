@@ -1,6 +1,6 @@
 # thumbor_extras
 
-Some useful extensions to thumbor.
+Some useful extensions to thumbor - extra filters and detectors.
 
 Currently not yet a pip package, so to use, you must `git clone` and add the root dir to your `PYTHONPATH`:
 
