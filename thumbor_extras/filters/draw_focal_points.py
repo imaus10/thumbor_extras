@@ -5,12 +5,12 @@ from thumbor.filters import BaseFilter, filter_method
 
 class Filter(BaseFilter):
     @filter_method(
+        BaseFilter.PositiveNonZeroNumber,
         BaseFilter.PositiveNumber,
         BaseFilter.PositiveNumber,
-        BaseFilter.PositiveNumber,
-        BaseFilter.PositiveNonZeroNumber
+        BaseFilter.PositiveNumber
     )
-    def draw_focal_points(self, r=0, g=255, b=0, line_width=3):
+    def draw_focal_points(self, line_width=3, r=0, g=255, b=0):
         img = np.array(self.engine.image)
         for focal_point in self.context.request.focal_points:
             width = focal_point.width
