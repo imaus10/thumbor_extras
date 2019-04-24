@@ -2,10 +2,8 @@
 
 Some useful extensions to thumbor - extra filters and detectors.
 
-Currently not yet a pip package, so to use, you must `git clone` and add the root dir to your `PYTHONPATH`:
-
 ```
-export PYTHONPATH=$PYTHONPATH:/path/to/thumbor_extras
+pip install git+https://github.com/imaus10/thumbor_extras#egg=thumbor_extras
 ```
 
 ## Detectors
@@ -59,5 +57,4 @@ Arguments:
 
 ## TODO
 
-- Make it pip-install-able
 - Choose thresholds empirically
