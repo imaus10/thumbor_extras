@@ -13,10 +13,10 @@ class Filter(BaseFilter):
     def draw_focal_points(self, line_width=3, r=0, g=255, b=0):
         img = np.array(self.engine.image)
         for focal_point in self.context.request.focal_points:
-            width = focal_point.width
-            height = focal_point.height
-            left = focal_point.x - (width / 2)
-            top = focal_point.y - (height / 2)
+            width = int(focal_point.width)
+            height = int(focal_point.height)
+            left = int(focal_point.x - (width / 2))
+            top = int(focal_point.y - (height / 2))
             right = left + width
             bottom = top + height
             cv2.rectangle(img, (left, top), (right, bottom), (r, g, b), line_width)
