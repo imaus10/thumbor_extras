@@ -20,30 +20,44 @@ class Detector(BaseDetector):
         try:
             img = np.array(engine.image)
             self.net.setInput(cv2.dnn.blobFromImage(img, size=(300, 300), swapRB=True))
-            faces = self.net.forward()
+            detections = self.net.forward()
         except Exception as e:
             logger.exception(e)
             logger.warn('Error during feature detection; skipping to next detector')
             self.next(callback)
             return
 
-        # TODO: choose a threshold value based on empirical evidence
         confidence_threshold = 0.2
-        num_faces = faces.shape[2]
-        if num_faces > 0:
-            for i in range(num_faces):
-                confidence = float(faces[0, 0, i, 2])
+        if detections.shape[2] > 0:
+            for detection in detections[0, 0, :, :]:
+                confidence = float(detection[2])
                 if confidence < confidence_threshold:
                     continue
-                left = int(faces[0, 0, i, 3] * img.shape[1])
-                top = int(faces[0, 0, i, 4] * img.shape[0])
-                right = int(faces[0, 0, i, 5] * img.shape[1])
-                bottom = int(faces[0, 0, i, 6] * img.shape[0])
+                class_id = int(detection[1])
+                left = int(detection[3] * img.shape[1])
+                top = int(detection[4] * img.shape[0])
+                right = int(detection[5] * img.shape[1])
+                bottom = int(detection[6] * img.shape[0])
                 width = right - left
                 height = bottom - top
+                # If the detection is of a person,
+                # and the person is vertically oriented,
+                # use the upper 1/4 of the box - focus on the face.
+                # In the case the person is upside down, it would focus on the feet.
+                # But consider - whoever is publishing a picture of an upside down person
+                # might appreciate that it focuses on the feet.
+                if class_id == 1 and height > width:
+                    height = int(height * 0.25)
                 self.context.request.focal_points.append(
-                    FocalPoint.from_square(left, top, width, height, origin="DNN Object Detection")
+                    FocalPoint.from_dict({
+                        'x'      : left + (width / 2),
+                        'y'      : top + (height / 2),
+                        'width'  : width,
+                        'height' : height,
+                        'z'      : confidence,
+                        'origin' : 'DNN Object Detection'
+                    })
                 )
             callback()
         else:
-            self.next(callback())
+            self.next(callback)
