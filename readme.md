@@ -53,18 +53,20 @@ Examples:
 
 Draws a box around the focal points, for displaying the results of the detectors on a given image. Takes optional arguments for box color and line width.
 
-Usage: `draw_focal_points([line_width, r, g, b])`
-
-Examples:
-- `draw_focal_points()`: draws boxes with defaults (green color and 3 pixel line width).
-- `draw_focal_points(5,255,0,0)`: draws boxes with red color and 5 pixel line width.
+Usage: `draw_focal_points([line_width, show_heatmap, show_labels, r, g, b])`
 
 Arguments:
 
 - `line_width`: the width of the box lines
+- `show_heatmap`: show a darker shade of green for higher-confidence detections; pass false to provide a single color RGB value for box color
+- `show_labels`: print the class label at the top of the box
 - `r`: R component of RGB color of box, default 0
 - `g`: G component of RGB color of box, default 255
 - `b`: B component of RGB color of box, default 0
+
+Examples:
+- `draw_focal_points()`: draws boxes with defaults (green color and 3 pixel line width).
+- `draw_focal_points(5,false,false,255,0,0)`: draws solid red boxes with 5 pixel line width, and no class labels.
 
 ## TODO
 

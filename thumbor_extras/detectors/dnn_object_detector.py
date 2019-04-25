@@ -4,6 +4,7 @@ import os
 from thumbor.detectors import BaseDetector
 from thumbor.point import FocalPoint
 from thumbor.utils import logger
+from thumbor_extras.detectors import coco_classes
 
 class Detector(BaseDetector):
     def __init__(self, context, index, detectors):
@@ -33,7 +34,8 @@ class Detector(BaseDetector):
                 confidence = float(detection[2])
                 if confidence < confidence_threshold:
                     continue
-                class_id = int(detection[1])
+                class_id = int(detection[1]) - 1 # make it zero-indexed
+                class_name = coco_classes[class_id]
                 left = int(detection[3] * img.shape[1])
                 top = int(detection[4] * img.shape[0])
                 right = int(detection[5] * img.shape[1])
@@ -46,7 +48,7 @@ class Detector(BaseDetector):
                 # In the case the person is upside down, it would focus on the feet.
                 # But consider - whoever is publishing a picture of an upside down person
                 # might appreciate that it focuses on the feet.
-                if class_id == 1 and height > width:
+                if class_name == 'person' and height > width:
                     height = int(height * 0.25)
                 self.context.request.focal_points.append(
                     FocalPoint.from_dict({
@@ -55,7 +57,7 @@ class Detector(BaseDetector):
                         'width'  : width,
                         'height' : height,
                         'z'      : confidence,
-                        'origin' : 'DNN Object Detection'
+                        'origin' : 'DNN Object Detection (class: {})'.format(class_name)
                     })
                 )
             callback()
