@@ -46,8 +46,8 @@ Draws a circle at the calculated center of mass, according to the focal points.
 Usage: `draw_center_of_mass([radius, r, g, b])`
 
 Examples:
-- `draw_center_of_mass()`: draws a circle with defaults (10 pixel radius and blue color).
-- `draw_center_of_mass(50,255,0,0)`: draws a red circle with a 50 pixel radius.
+- `draw_center_of_mass()`: draws a circle with defaults (10 pixel radius and red color).
+- `draw_center_of_mass(50,0,0,255)`: draws a blue circle with a 50 pixel radius.
 
 ### draw_focal_points
 
