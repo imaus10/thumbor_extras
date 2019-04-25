@@ -46,4 +46,4 @@ class Detector(BaseDetector):
                 )
             callback()
         else:
-            self.next(callback())
+            self.next(callback)
