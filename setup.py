@@ -70,7 +70,7 @@ with open('readme.md') as f:
 
 setup(
     name='thumbor_extras',
-    version='0.1.0',
+    version='0.1.1',
     author='Austin Blanton',
     author_email='imaus10@gmail.com',
     description='Some useful extensions to thumbor - extra filters and detectors.',

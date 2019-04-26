@@ -3,7 +3,7 @@
 Some useful extensions to [thumbor](https://thumbor.readthedocs.io/en/latest/index.html) - extra filters and detectors.
 
 ```
-pip install git+https://github.com/imaus10/thumbor_extras#egg=thumbor_extras
+pip install thumbor_extras
 ```
 
 ## Detectors
