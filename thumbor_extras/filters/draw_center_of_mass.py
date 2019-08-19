@@ -13,5 +13,6 @@ class Filter(BaseFilter):
     def draw_center_of_mass(self, radius=10, r=255, g=0, b=0):
         x, y = self.context.transformer.get_center_of_mass()
         img = np.array(self.engine.image)
+        # TODO: draw by percentage of area, not absolute pixel size
         cv2.circle(img, (int(x), int(y)), radius, (r, g, b), -1)
         self.engine.image = Image.fromarray(img)

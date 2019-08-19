@@ -25,12 +25,15 @@ class Filter(BaseFilter):
             right = left + width
             bottom = top + height
 
-            # A 🔥 heat map 🔥 from white (0% confidence) to green (100% confidence)
+            # A 🔥 heatmap 🔥 (kinda) from transparent (0% confidence) to opaque (100% confidence)
+            # TODO: different colors (🌈-map)
             weight = focal_point.weight
             if show_heatmap:
-                r = int(255 * (1 - weight))
-                g = 255
-                b = int(255 * (1 - weight))
+                overlay = img.copy()
+                cv2.rectangle(overlay, (left, top), (right, bottom), (r, g, b), line_width)
+                cv2.addWeighted(overlay, weight, img, 1 - weight, 0, img)
+            else:
+                cv2.rectangle(img, (left, top), (right, bottom), (r, g, b), line_width)
 
             # Draw class labels
             match = class_label_regex.match(focal_point.origin)
@@ -38,16 +41,16 @@ class Filter(BaseFilter):
                 # one-tenth the height of the box
                 label_height = height / 10
                 # the font is *about* 30 pixels tall
-                scale = label_height / 30
+                scale = label_height / 30.
                 class_label = match.groups(1)[0]
                 cv2.putText(
                     img,
-                    ' {} ({})'.format(class_label, weight),
+                    ' {} ({:0.3f})'.format(class_label, weight),
                     (left, top + label_height),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     scale,
                     (r, g, b),
                     line_width
                 )
-            cv2.rectangle(img, (left, top), (right, bottom), (r, g, b), line_width)
+
             self.engine.image = Image.fromarray(img)
