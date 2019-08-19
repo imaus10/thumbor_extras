@@ -18,6 +18,7 @@ class Detector(BaseDetector):
     def detect(self, callback):
         engine = self.context.modules.engine
         try:
+            engine.image_data_as_rgb()
             img = np.array(engine.image)
             self.net.setInput(cv2.dnn.blobFromImage(img, size=(300, 300), mean=(104., 177., 123.)))
             faces = self.net.forward()
@@ -29,21 +30,22 @@ class Detector(BaseDetector):
 
         # TODO: choose threshold based on empirical evidence
         confidence_threshold = 0.3
-        num_faces = faces.shape[2]
+        num_faces = 0
+        for face in faces[0, 0, :, :]:
+            confidence = float(face[2])
+            if confidence < confidence_threshold:
+                continue
+            num_faces += 1
+            left = int(face[3] * img.shape[1])
+            top = int(face[4] * img.shape[0])
+            right = int(face[5] * img.shape[1])
+            bottom = int(face[6] * img.shape[0])
+            width = right - left
+            height = bottom - top
+            self.context.request.focal_points.append(
+                FocalPoint.from_square(left, top, width, height, origin="DNN Face Detection")
+            )
         if num_faces > 0:
-            for i in range(num_faces):
-                confidence = float(faces[0, 0, i, 2])
-                if confidence < confidence_threshold:
-                    continue
-                left = int(faces[0, 0, i, 3] * img.shape[1])
-                top = int(faces[0, 0, i, 4] * img.shape[0])
-                right = int(faces[0, 0, i, 5] * img.shape[1])
-                bottom = int(faces[0, 0, i, 6] * img.shape[0])
-                width = right - left
-                height = bottom - top
-                self.context.request.focal_points.append(
-                    FocalPoint.from_square(left, top, width, height, origin="DNN Face Detection")
-                )
             callback()
         else:
             self.next(callback)
