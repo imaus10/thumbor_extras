@@ -71,3 +71,22 @@ Examples:
 ## TODO
 
 - Choose thresholds empirically
+
+## Development
+
+Because I will definitely forget. Python development can be a pain.
+
+```
+# use python 2 - thumbor doesn't support 3 yet.
+virtualenv thumbor_env --python=/path/to/python2
+source thumbor_env/bin/activate
+
+# develop
+pip install -e .
+
+# test
+# i don't know why setup.py can't install pytest...but it fails without manual install.
+# it could be a python2 / mac thing.
+pip install pytest
+python setup.py test
+```

@@ -70,7 +70,7 @@ with open('readme.md') as f:
 
 setup(
     name='thumbor_extras',
-    version='0.1.1',
+    version='1.0.0',
     author='Austin Blanton',
     author_email='imaus10@gmail.com',
     description='Some useful extensions to thumbor - extra filters and detectors.',
@@ -87,8 +87,15 @@ setup(
         'opencv-python',
         'thumbor'
     ],
+    setup_requires=[
+        'pytest-runner'
+    ],
+    tests_require=[
+        'mock',
+        'pytest'
+    ],
     cmdclass={
-        'egg_info': DownloadModelFiles
+        'egg_info' : DownloadModelFiles,
     },
     include_package_data=True
  )

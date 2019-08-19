@@ -1,5 +1,7 @@
 build
 dist
+test_fixtures
 *.egg-info
+.eggs
 *.pb
 *.pbtxt
