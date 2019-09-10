@@ -78,16 +78,25 @@ Examples:
 Because I will definitely forget. Python development can be a pain.
 
 ```
+# -- ENV --
 # use python 2 - thumbor doesn't support 3 yet.
 virtualenv thumbor_env --python=/path/to/python2
 source thumbor_env/bin/activate
 
-# develop
+# -- DEVELOP --
 pip install -e .
 
-# test
+# -- TEST --
 # i don't know why setup.py can't install pytest...but it fails without manual install.
 # it could be a python2 / mac thing.
 pip install pytest
 python setup.py test
+
+# -- DISTRIBUTE --
+python setup.py sdist
+# make a wheel from the source tarball (to use manifest correctly)
+pip wheel --no-index --no-deps --wheel-dir dist dist/*.tar.gz
+pip install twine
+# make sure pip URLs are configured per https://truveris.github.io/articles/configuring-pypirc/
+python -m twine upload --repository pypi dist/*
 ```

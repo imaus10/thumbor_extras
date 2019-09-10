@@ -1,1 +1,3 @@
-recursive-include thumbor_extras/detectors/model_files *.pb *.pbtxt
+include readme.md
+global-include *.pb *.pbtxt
+global-exclude tests/*
