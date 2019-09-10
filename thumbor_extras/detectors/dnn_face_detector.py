@@ -43,7 +43,14 @@ class Detector(BaseDetector):
             width = right - left
             height = bottom - top
             self.context.request.focal_points.append(
-                FocalPoint.from_square(left, top, width, height, origin="DNN Face Detection")
+                FocalPoint.from_dict({
+                    'x'      : left + (width / 2),
+                    'y'      : top + (height / 2),
+                    'width'  : width,
+                    'height' : height,
+                    'z'      : confidence,
+                    'origin' : 'DNN Face Detection'
+                })
             )
         if num_faces > 0:
             callback()

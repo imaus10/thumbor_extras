@@ -9,6 +9,7 @@ from thumbor_extras.filters import rainbow
 class Filter(BaseFilter):
     @filter_method(
         BaseFilter.PositiveNonZeroNumber,
+        BaseFilter.DecimalNumber,
         BaseFilter.Boolean,
         BaseFilter.Boolean,
         BaseFilter.Boolean,
@@ -16,7 +17,7 @@ class Filter(BaseFilter):
         BaseFilter.PositiveNumber,
         BaseFilter.PositiveNumber
     )
-    def draw_focal_points(self, line_width=3, show_heatmap=True, show_labels=True, show_rainbow=True, r=0, g=255, b=0):
+    def draw_focal_points(self, line_width=3, label_height_percentage=.1, show_labels=True, show_heatmap=True, show_rainbow=True, r=0, g=255, b=0):
         img = np.array(self.engine.image)
         class_label_regex = re.compile('DNN Object Detection \(class: ([a-z ]+)\)')
         for index, focal_point in enumerate(self.context.request.focal_points):
@@ -42,21 +43,27 @@ class Filter(BaseFilter):
                 cv2.rectangle(img, (left, top), (right, bottom), (r, g, b), line_width)
 
             # Draw class labels
-            match = class_label_regex.match(focal_point.origin)
-            if show_labels and match:
-                # one-tenth the height of the box
-                label_height = height / 10
-                # the font is *about* 30 pixels tall
-                scale = label_height / 30.
-                class_label = match.groups(1)[0]
-                cv2.putText(
-                    img,
-                    ' {} ({:0.3f})'.format(class_label, weight),
-                    (left, top + label_height),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    scale,
-                    (r, g, b),
-                    line_width
-                )
+            if show_labels:
+                match = class_label_regex.match(focal_point.origin)
+                if match:
+                    class_label = match.groups(1)[0]
+                elif focal_point.origin == 'DNN Face Detection':
+                    class_label = 'face'
+                    match = True
+
+                if match:
+                    # one-tenth the height of the box
+                    label_height = int(height * label_height_percentage)
+                    # the font is *about* 30 pixels tall
+                    scale = label_height / 30.
+                    cv2.putText(
+                        img,
+                        ' {} ({:0.3f})'.format(class_label, weight),
+                        (left, top + label_height),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        scale,
+                        (r, g, b),
+                        line_width
+                    )
 
             self.engine.image = Image.fromarray(img)
